@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>账号中心</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(120deg, #fffbe6 0%, #b2ebf2 50%, #e1bee7 100%);
+      font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .account-title {
+      font-size: 56px;
+      font-weight: 700;
+      color: #222;
+      letter-spacing: 4px;
+      margin-bottom: 32px;
+      text-shadow: 0 0 24px #fff, 0 0 48px #b2ebf2;
+    }
+    .account-box {
+      background: rgba(255,255,255,0.85);
+      border-radius: 24px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+      padding: 48px 40px;
+      min-width: 320px;
+      text-align: center;
+    }
+    .account-info {
+      font-size: 22px;
+      color: #555;
+      margin-bottom: 18px;
+    }
+    .account-btn {
+      font-size: 20px;
+      padding: 10px 36px;
+      border-radius: 24px;
+      border: none;
+      background: #b2ebf2;
+      color: #222;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: background 0.2s, color 0.2s;
+    }
+    .account-btn:hover {
+      background: #ffe6b0;
+      color: #0078ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="account-title">账号中心</div>
+  <div class="account-box">
+    <div id="form-toggle" style="margin-bottom: 24px;">
+      <button class="account-btn" id="show-login" style="margin-right: 12px;">登录</button>
+      <button class="account-btn" id="show-register">注册</button>
+    </div>
+    <form id="login-form">
+      <div class="account-info">登录到您的账号</div>
+      <input type="text" placeholder="用户名" required style="width: 80%; padding: 10px; margin-bottom: 16px; border-radius: 8px; border: 1px solid #ccc; font-size: 18px;">
+      <input type="password" placeholder="密码" required style="width: 80%; padding: 10px; margin-bottom: 24px; border-radius: 8px; border: 1px solid #ccc; font-size: 18px;">
+      <button type="submit" class="account-btn" style="width: 90%;">登录</button>
+    </form>
+    <form id="register-form" style="display:none;">
+      <div class="account-info">注册新账号</div>
+      <input type="text" placeholder="用户名" required style="width: 80%; padding: 10px; margin-bottom: 16px; border-radius: 8px; border: 1px solid #ccc; font-size: 18px;">
+      <input type="password" placeholder="密码" required style="width: 80%; padding: 10px; margin-bottom: 16px; border-radius: 8px; border: 1px solid #ccc; font-size: 18px;">
+      <input type="password" placeholder="确认密码" required style="width: 80%; padding: 10px; margin-bottom: 24px; border-radius: 8px; border: 1px solid #ccc; font-size: 18px;">
+      <button type="submit" class="account-btn" style="width: 90%;">注册</button>
+    </form>
+    <button class="account-btn" onclick="window.location.href='index.html'" style="margin-top: 24px;">返回首页</button>
+  </div>
+  <script>
+    // 登录/注册切换
+    document.getElementById('show-login').onclick = function() {
+      document.getElementById('login-form').style.display = '';
+      document.getElementById('register-form').style.display = 'none';
+    };
+    document.getElementById('show-register').onclick = function() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('register-form').style.display = '';
+    };
+    // 表单阻止默认提交
+    document.getElementById('login-form').onsubmit = function(e) {
+      e.preventDefault();
+      alert('登录功能仅为演示，未实现后端。');
+    };
+    document.getElementById('register-form').onsubmit = function(e) {
+      e.preventDefault();
+      alert('注册功能仅为演示，未实现后端。');
+    };
+  </script>
+</body>
+</html> 

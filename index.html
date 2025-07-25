@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>NEUROTOPOS-神经共鸣地图</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+      background: #f8f8f8;
+      overflow-x: hidden;
+    }
+    /* 顶部导航栏 */
+    .navbar {
+      width: 100vw;
+      height: 56px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      padding: 0 32px;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-logo {
+      margin-right: 32px;
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+    }
+    .navbar-logo img {
+      height: 56px;
+      display: block;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+    .navbar-links {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      color: #222;
+    }
+    .navbar-links span {
+      margin: 0 12px;
+      color: #888;
+    }
+    .navbar-links a {
+      color: #222;
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.2s;
+    }
+    .navbar-links a:hover {
+      color: #0078ff;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      margin-right: 64px;
+    }
+    .navbar-search {
+      background: #f5f5f5;
+      border-radius: 16px;
+      padding: 4px 10px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .navbar-search:hover {
+      background: #e0e0e0;
+    }
+    .navbar-search-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
+    }
+    .navbar-account {
+      background: #f5f5f5;
+      border-radius: 16px;
+      padding: 4px 16px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .navbar-account-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 4px;
+    }
+    /* 主视觉区 */
+    .hero {
+      width: 100vw;
+      height: 100vh;
+      background: none;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding-top: 56px;
+      box-sizing: border-box;
+    }
+    .hero-bg {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('background.jpg') center center/cover no-repeat;
+      filter: blur(6px);
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: -30px;
+    }
+    .hero-title {
+      font-size: 120px;
+      font-weight: 400;
+      letter-spacing: 8px;
+      color: #222;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      text-shadow: 0 0 50px #fff, 0 0 50px #b3e0ff, 0 0 12px #fff, 0 0 2px #fff;
+    }
+    .hero-title span {
+      color: #fff;
+      text-shadow: 0 0 8px #bbb;
+    }
+    .hero-subtitle {
+      font-size: 36px;
+      font-weight: 400;
+      color: #222;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+    .hero-desc {
+      font-size: 18px;
+      color: #888;
+      margin-bottom: 36px;
+      letter-spacing: 2px;
+    }
+    .hero-btn {
+      font-size: 32px;
+      padding: 12px 48px;
+      border-radius: 32px;
+      border: none;
+      background: rgba(238,238,238,0.4);
+      color: #444;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: background 0.2s, color 0.2s;
+    }
+    .hero-btn:hover {
+      background: #0078ff;
+      color: #fff;
+    }
+    @media (max-width: 900px) {
+      .hero-title { font-size: 56px; }
+      .hero-subtitle { font-size: 22px; }
+      .hero-btn { font-size: 22px; padding: 10px 32px; }
+    }
+    @media (max-width: 600px) {
+      .navbar { padding: 0 8px; }
+      .hero-title { font-size: 32px; }
+      .hero-subtitle { font-size: 16px; }
+      .hero-btn { font-size: 16px; padding: 8px 18px; }
+    }
+    .scroll-down-arrow {
+      position: absolute;
+      left: 50%;
+      bottom: 32px;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 36px solid transparent;
+      border-right: 36px solid transparent;
+      border-top: 44px solid #888;
+      animation: arrowMove 1.6s infinite ease-in-out;
+      opacity: 0.7;
+      z-index: 2;
+      transition: left 0.3s;
+    }
+    @keyframes arrowMove {
+      0% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(18px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <div class="navbar">
+    <div class="navbar-left">
+      <div class="navbar-logo"><img src="logo.png" alt="logo" id="nav-logo"></div>
+      <div class="navbar-links">
+        <a href="javascript:void(0)">共享日记平台</a>
+        <span>|</span>
+        <a href="#capsule-section" id="nav-capsule">故事胶囊机</a>
+        <span>|</span>
+        <a href="#carousel-section" id="nav-carousel">泪点地图</a>
+        <span>|</span>
+        <a href="javascript:void(0)">更多</a>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <button class="navbar-search" aria-label="搜索">
+        <svg class="navbar-search-icon" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="#888" stroke-width="2"/>
+          <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <a class="navbar-account" href="account.html" style="cursor:pointer;">
+        <svg class="navbar-account-icon" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8" r="4" stroke="#888" stroke-width="2"/>
+          <path d="M4 20c0-4 8-4 8-4s8 0 8 4" stroke="#888" stroke-width="2"/>
+        </svg>
+        account
+      </a>
+    </div>
+  </div>
+  <!-- 主视觉区 -->
+  <div class="hero" id="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-title">
+        <span>NEU</span>ROTOPOS-
+      </div>
+      <div class="hero-subtitle">神经共鸣地图</div>
+      <div class="hero-desc">———— 最 好 的 教 育 不 是 灌 输，而 是 唤 醒 ————</div>
+      <button class="hero-btn">寻找...</button>
+    </div>
+  </div>
+  <!-- 故事胶囊机部分 -->
+  <section class="capsule-section" id="capsule-section">
+    <div class="capsule-title-wrap">
+      <h2 class="capsule-title">故事胶囊机</h2>
+      <div class="capsule-title-underline"></div>
+    </div>
+    <div class="capsule-images">
+      <div class="capsule-img-wrap">
+        <img src="capsule1.jpg" alt="图片1">
+      </div>
+      <div class="capsule-img-wrap">
+        <img src="capsule2.jpg" alt="图片2">
+      </div>
+      <div class="capsule-img-wrap">
+        <img src="capsule3.jpg" alt="图片3">
+      </div>
+    </div>
+  </section>
+  <!-- 第三部分：图片浏览区（可拖拽轮播） -->
+  <section class="carousel-section" id="carousel-section">
+    <div class="carousel-title-wrap">
+      <h2 class="carousel-title">泪点地图</h2>
+      <div class="carousel-title-underline"></div>
+    </div>
+    <div class="carousel-container">
+      <div class="carousel-frame" id="carouselFrame">
+        <div class="carousel-track" id="carouselTrack">
+          <img src="carousel1.jpg" alt="图片1" class="carousel-img">
+          <img src="carousel2.jpg" alt="图片2" class="carousel-img">
+          <img src="carousel3.jpg" alt="图片3" class="carousel-img">
+          <img src="carousel4.jpg" alt="图片4" class="carousel-img">
+        </div>
+      </div>
+    </div>
+  </section>
+  <style>
+    .capsule-section {
+      background: #fff;
+      padding: 80px 0 60px 0;
+      margin: 0;
+    }
+    .capsule-title-wrap {
+      margin-left: 32px;
+      margin-bottom: 32px;
+      position: relative;
+      width: 440px;
+      max-width: 90vw;
+    }
+    .capsule-title {
+      font-size: 40px;
+      font-weight: 400;
+      color: #111;
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: 2px;
+    }
+    .capsule-title-underline {
+      width: 100%;
+      height: 6px;
+      background: #ffe6b0;
+      border-radius: 3px;
+      margin-top: 8px;
+    }
+    .capsule-images {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 80px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .capsule-img-wrap {
+      border-radius: 32px;
+      overflow: hidden;
+      width: 300px;
+      height: 480px;
+      background: #f5f5f5;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-120px);
+      opacity: 0;
+      transition: transform 0.8s cubic-bezier(.23,1.02,.53,.97), opacity 0.8s cubic-bezier(.23,1.02,.53,.97);
+    }
+    .capsule-img-wrap.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .capsule-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    @media (max-width: 1100px) {
+      .capsule-images {
+        gap: 32px;
+      }
+      .capsule-img-wrap {
+        width: 220px;
+        height: 320px;
+      }
+      .capsule-title {
+        font-size: 40px;
+      }
+    }
+    @media (max-width: 700px) {
+      .capsule-images {
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      .capsule-img-wrap {
+        width: 90vw;
+        height: 50vw;
+        max-width: 320px;
+        max-height: 400px;
+      }
+      .capsule-title-wrap {
+        width: 90vw;
+        margin-left: 5vw;
+      }
+    }
+  </style>
+  <style>
+    .carousel-section {
+      background: #fff;
+      padding: 80px 0 60px 0;
+    }
+    .carousel-title-wrap {
+      margin-left: 32px;
+      margin-bottom: 32px;
+      position: relative;
+      width: 440px;
+      max-width: 90vw;
+    }
+    .carousel-title {
+      font-size: 40px;
+      font-weight: 400;
+      color: #111;
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: 2px;
+    }
+    .carousel-title-underline {
+      width: 100%;
+      height: 6px;
+      background: #ffe6b0;
+      border-radius: 3px;
+      margin-top: 8px;
+    }
+    .carousel-container {
+      width: 100vw;
+      margin-top: 24px;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+.carousel-frame {
+  width: 1200px;
+  height: 400px;
+  max-width: 96vw;
+  max-height: 60vw;
+  overflow: hidden;
+  border-radius: 32px;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 8px 0 rgba(0,150,255,0.08);
+  background: linear-gradient(120deg, #fffbe6 0%, #b2ebf2 50%, #e1bee7 100%);
+  position: relative;
+  touch-action: pan-y;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carousel-frame:active {
+  cursor: grabbing;
+}
+.carousel-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(.23,1.02,.53,.97);
+  will-change: transform;
+}
+.carousel-img {
+  width: calc((1200px - 36px * 8) / 4);
+  max-width: calc((96vw - 36px * 8) / 4);
+  height: 340px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 32px;
+  user-select: none;
+  pointer-events: none;
+  margin: 0 36px;
+  display: block;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(.23,1.02,.53,.97), transform 0.7s cubic-bezier(.23,1.02,.53,.97);
+}
+.carousel-img.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (max-width: 1300px) {
+  .carousel-frame {
+    width: 96vw;
+    height: 30vw;
+    max-width: 100vw;
+    max-height: 70vw;
+  }
+  .carousel-img {
+    width: calc((96vw - 36px * 8) / 4);
+    max-width: calc((96vw - 36px * 8) / 4);
+    height: 24vw;
+  }
+}
+@media (max-width: 900px) {
+  .carousel-frame {
+    width: 98vw;
+    height: 40vw;
+    max-width: 100vw;
+    max-height: 70vw;
+  }
+  .carousel-img {
+    width: calc((98vw - 36px * 8) / 4);
+    max-width: calc((98vw - 36px * 8) / 4);
+    height: 32vw;
+  }
+}
+@media (max-width: 700px) {
+  .carousel-frame {
+    width: 100vw;
+    height: 60vw;
+    max-width: 100vw;
+    max-height: 70vw;
+  }
+  .carousel-img {
+    width: calc((100vw - 36px * 8) / 4);
+    max-width: calc((100vw - 36px * 8) / 4);
+    height: 40vw;
+  }
+}
+  </style>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+  <div class="scroll-down-arrow"></div>
+  <!-- 搜索弹窗 -->
+  <div class="search-modal" id="searchModal">
+    <div class="search-modal-content">
+      <input type="text" class="search-input" placeholder="请输入搜索内容..." autofocus />
+      <button class="search-close" id="searchClose" aria-label="关闭">×</button>
+    </div>
+  </div>
+  <style>
+    .search-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.25);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .search-modal.active {
+      display: flex;
+    }
+    .search-modal-content {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 24px 24px 24px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      position: relative;
+      min-width: 320px;
+    }
+    .search-input {
+      font-size: 20px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      outline: none;
+      width: 220px;
+    }
+    .search-close {
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #888;
+      position: absolute;
+      right: 12px;
+      top: 8px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .search-close:hover {
+      color: #0078ff;
+    }
+  </style>
+  <script>
+    // 搜索弹窗逻辑
+    document.querySelector('.navbar-search').onclick = function() {
+      document.getElementById('searchModal').classList.add('active');
+      setTimeout(function() {
+        document.querySelector('.search-input').focus();
+      }, 100);
+    };
+    document.getElementById('searchClose').onclick = function() {
+      document.getElementById('searchModal').classList.remove('active');
+    };
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.getElementById('searchModal').classList.remove('active');
+      }
+    });
+
+    // 让底部倒三角形与“寻找...”按钮中间对齐
+    function alignArrowToButton() {
+      var btn = document.querySelector('.hero-btn');
+      var arrow = document.querySelector('.scroll-down-arrow');
+      if (btn && arrow) {
+        var btnRect = btn.getBoundingClientRect();
+        var btnCenter = btnRect.left + btnRect.width / 2 - 27;
+        arrow.style.left = btnCenter + 'px';
+        arrow.style.transform = 'translateX(-50%)';
+      }
+    }
+    window.addEventListener('resize', alignArrowToButton);
+    window.addEventListener('DOMContentLoaded', alignArrowToButton);
+    setTimeout(alignArrowToButton, 300); // 防止初始渲染错位
+
+    // 只在第一屏显示底部三角形
+    function toggleArrowOnScroll() {
+      var arrow = document.querySelector('.scroll-down-arrow');
+      var hero = document.querySelector('.hero');
+      if (!arrow || !hero) return;
+      var heroRect = hero.getBoundingClientRect();
+      if (heroRect.bottom > 100) {
+        arrow.style.display = '';
+      } else {
+        arrow.style.display = 'none';
+      }
+    }
+    window.addEventListener('scroll', toggleArrowOnScroll);
+    window.addEventListener('DOMContentLoaded', toggleArrowOnScroll);
+
+    // 可反复触发的“从天而降”动画
+    function handleCapsuleImagesAnimation() {
+      var section = document.querySelector('.capsule-section');
+      var imgs = document.querySelectorAll('.capsule-img-wrap');
+      if (!section || imgs.length === 0) return;
+      var sectionRect = section.getBoundingClientRect();
+      var windowH = window.innerHeight;
+      if (sectionRect.top < windowH - 120) {
+        // 进入视口，依次添加active
+        imgs.forEach(function(img, idx) {
+          setTimeout(function() {
+            img.classList.add('active');
+          }, idx * 220);
+        });
+      } else {
+        // 离开视口，全部移除active
+        imgs.forEach(function(img) {
+          img.classList.remove('active');
+        });
+      }
+    }
+    window.addEventListener('scroll', handleCapsuleImagesAnimation);
+    window.addEventListener('DOMContentLoaded', handleCapsuleImagesAnimation);
+
+    // 点击logo滚动回第一部分
+    document.getElementById('nav-logo').onclick = function(e) {
+      e.preventDefault();
+      document.getElementById('hero-section').scrollIntoView({behavior: 'smooth'});
+    };
+  </script>
+  <script>
+    // 拖拽轮播功能
+    const carouselFrame = document.getElementById('carouselFrame');
+    const carouselTrack = document.getElementById('carouselTrack');
+    const carouselImgs = carouselTrack.querySelectorAll('.carousel-img');
+    let carouselIdx = 0;
+    let isDragging = false;
+    let startX = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let animationID = 0;
+
+    // 优化拖拽轮播体验
+    let dragStartX = 0;
+    let dragCurrentX = 0;
+    let dragMoved = false;
+    function getImgWidth() {
+      return carouselImgs[0].clientWidth + 72; // 图片宽+两侧间距
+    }
+    function setCarouselPositionIdx(idx) {
+      const maxIdx = Math.max(0, carouselImgs.length - 4);
+      carouselIdx = Math.max(0, Math.min(idx, maxIdx));
+      carouselTrack.style.transition = 'transform 0.5s cubic-bezier(.23,1.02,.53,.97)';
+      carouselTrack.style.transform = `translateX(${-carouselIdx * getImgWidth()}px)`;
+      setTimeout(() => { carouselTrack.style.transition = ''; }, 500);
+    }
+    carouselFrame.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      dragMoved = false;
+      dragStartX = e.pageX;
+      prevTranslate = -carouselIdx * getImgWidth();
+      carouselFrame.classList.add('dragging');
+      document.body.style.userSelect = 'none';
+    });
+    carouselFrame.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      dragMoved = true;
+      dragCurrentX = e.pageX;
+      const dx = dragCurrentX - dragStartX;
+      currentTranslate = prevTranslate + dx;
+      carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
+    });
+    carouselFrame.addEventListener('mouseup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      document.body.style.userSelect = '';
+      carouselFrame.classList.remove('dragging');
+      const dx = e.pageX - dragStartX;
+      const maxIdx = Math.max(0, carouselImgs.length - 4);
+      if (dx < -50 && carouselIdx < maxIdx) carouselIdx++;
+      if (dx > 50 && carouselIdx > 0) carouselIdx--;
+      setCarouselPositionIdx(carouselIdx);
+    });
+    carouselFrame.addEventListener('mouseleave', () => {
+      if (isDragging) {
+        isDragging = false;
+        document.body.style.userSelect = '';
+        carouselFrame.classList.remove('dragging');
+        const dx = dragCurrentX - dragStartX;
+        const maxIdx = Math.max(0, carouselImgs.length - 4);
+        if (dx < -50 && carouselIdx < maxIdx) carouselIdx++;
+        if (dx > 50 && carouselIdx > 0) carouselIdx--;
+        setCarouselPositionIdx(carouselIdx);
+      }
+    });
+    carouselFrame.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      dragMoved = false;
+      dragStartX = e.touches[0].pageX;
+      prevTranslate = -carouselIdx * getImgWidth();
+      carouselFrame.classList.add('dragging');
+    });
+    carouselFrame.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      dragMoved = true;
+      dragCurrentX = e.touches[0].pageX;
+      const dx = dragCurrentX - dragStartX;
+      currentTranslate = prevTranslate + dx;
+      carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
+      e.preventDefault();
+    }, {passive: false});
+    carouselFrame.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      carouselFrame.classList.remove('dragging');
+      const dx = e.changedTouches[0].pageX - dragStartX;
+      const maxIdx = Math.max(0, carouselImgs.length - 4);
+      if (dx < -50 && carouselIdx < maxIdx) carouselIdx++;
+      if (dx > 50 && carouselIdx > 0) carouselIdx--;
+      setCarouselPositionIdx(carouselIdx);
+    });
+    window.addEventListener('resize', () => setCarouselPositionIdx(carouselIdx));
+    window.addEventListener('DOMContentLoaded', () => setCarouselPositionIdx(carouselIdx));
+  </script>
+  <script>
+    // 泪点地图图片淡入动画
+    function activateCarouselImages() {
+      var section = document.querySelector('.carousel-section');
+      var imgs = document.querySelectorAll('.carousel-img');
+      if (!section || imgs.length === 0) return;
+      var sectionRect = section.getBoundingClientRect();
+      var windowH = window.innerHeight;
+      if (sectionRect.top < windowH - 120) {
+        imgs.forEach(function(img, idx) {
+          setTimeout(function() {
+            img.classList.add('active');
+          }, idx * 180);
+        });
+      } else {
+        imgs.forEach(function(img) {
+          img.classList.remove('active');
+        });
+      }
+    }
+    window.addEventListener('scroll', activateCarouselImages);
+    window.addEventListener('DOMContentLoaded', activateCarouselImages);
+  </script>
+</body>
+</html> 
