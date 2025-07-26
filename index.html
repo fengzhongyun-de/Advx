@@ -134,17 +134,47 @@
       margin-bottom: 16px;
       font-family: 'Segoe UI', 'Arial', sans-serif;
       text-shadow: 0 0 50px #fff, 0 0 50px #b3e0ff, 0 0 12px #fff, 0 0 2px #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .hero-title span {
+    .title-letter {
+      color: #222;
+      text-shadow: 0 0 50px #fff, 0 0 50px #b3e0ff, 0 0 12px #fff, 0 0 2px #fff;
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .title-letter.neu {
       color: #fff;
       text-shadow: 0 0 8px #bbb;
+    }
+    .title-letter.inverted {
+      color: #fff;
+      text-shadow: 0 0 8px #bbb;
+    }
+    .title-letter.inverted-neu {
+      color: #222;
+      text-shadow: 0 0 50px #fff, 0 0 50px #b3e0ff, 0 0 12px #fff, 0 0 2px #fff;
     }
     .hero-subtitle {
       font-size: 36px;
       font-weight: 400;
       color: #222;
       margin-bottom: 12px;
-      display: inline-block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .subtitle-letter {
+      color: #222;
+      transition: color 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .subtitle-letter.inverted {
+      color: #fff;
+      text-shadow: 0 0 8px #bbb;
     }
     .hero-desc {
       font-size: 18px;
@@ -235,10 +265,27 @@
   <div class="hero" id="hero-section">
     <div class="hero-bg"></div>
     <div class="hero-content">
-      <div class="hero-title">
-        <span>NEU</span>ROTOPOS-
+      <div class="hero-title" id="heroTitle">
+        <span class="title-letter neu" data-letter="N">N</span>
+        <span class="title-letter neu" data-letter="E">E</span>
+        <span class="title-letter neu" data-letter="U">U</span>
+        <span class="title-letter" data-letter="R">R</span>
+        <span class="title-letter" data-letter="O">O</span>
+        <span class="title-letter" data-letter="T">T</span>
+        <span class="title-letter" data-letter="O">O</span>
+        <span class="title-letter" data-letter="P">P</span>
+        <span class="title-letter" data-letter="O">O</span>
+        <span class="title-letter" data-letter="S">S</span>
+        <span class="title-letter" data-letter="-">-</span>
       </div>
-      <div class="hero-subtitle">神经共鸣地图</div>
+      <div class="hero-subtitle" id="heroSubtitle">
+        <span class="subtitle-letter" data-letter="神">神</span>
+        <span class="subtitle-letter" data-letter="经">经</span>
+        <span class="subtitle-letter" data-letter="共">共</span>
+        <span class="subtitle-letter" data-letter="鸣">鸣</span>
+        <span class="subtitle-letter" data-letter="地">地</span>
+        <span class="subtitle-letter" data-letter="图">图</span>
+      </div>
       <div class="hero-desc">———— 最 好 的 教 育 不 是 灌 输，而 是 唤 醒 ————</div>
       <button class="hero-btn">寻找...</button>
     </div>
@@ -301,10 +348,21 @@
     }
     .capsule-title-underline {
       width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #fff 0%, #e0e0e0 25%, #888 50%, #e0e0e0 75%, #fff 100%);
+      border-radius: 1px;
+      margin-top: 12px;
+      position: relative;
+    }
+    .capsule-title-underline::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
       height: 6px;
-      background: #ffe6b0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 25%, rgba(224,224,224,0.4) 50%, rgba(255,255,255,0.3) 75%, transparent 100%);
       border-radius: 3px;
-      margin-top: 8px;
     }
     .capsule-images {
       display: flex;
@@ -390,10 +448,21 @@
     }
     .carousel-title-underline {
       width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #fff 0%, #e0e0e0 25%, #888 50%, #e0e0e0 75%, #fff 100%);
+      border-radius: 1px;
+      margin-top: 12px;
+      position: relative;
+    }
+    .carousel-title-underline::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
       height: 6px;
-      background: #ffe6b0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 25%, rgba(224,224,224,0.4) 50%, rgba(255,255,255,0.3) 75%, transparent 100%);
       border-radius: 3px;
-      margin-top: 8px;
     }
     .carousel-container {
       width: 100vw;
@@ -411,8 +480,8 @@
   max-height: 60vw;
   overflow: hidden;
   border-radius: 32px;
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 8px 0 rgba(0,150,255,0.08);
-  background: linear-gradient(120deg, #fffbe6 0%, #b2ebf2 50%, #e1bee7 100%);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 8px 0 rgba(158,158,158,0.08);
+  background: linear-gradient(120deg, #f5f5f5 0%, #e0e0e0 50%, #bdbdbd 100%);
   position: relative;
   touch-action: pan-y;
   cursor: grab;
@@ -743,6 +812,79 @@
     }
     window.addEventListener('scroll', activateCarouselImages);
     window.addEventListener('DOMContentLoaded', activateCarouselImages);
+
+    // NEUROTOPOS 鼠标跟随效果
+    const heroTitle = document.getElementById('heroTitle');
+    const titleLetters = document.querySelectorAll('.title-letter');
+    
+    heroTitle.addEventListener('mousemove', (e) => {
+      const rect = heroTitle.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const centerX = rect.width / 2;
+      const distanceFromCenter = Math.abs(mouseX - centerX);
+      const maxDistance = rect.width / 2;
+      
+      titleLetters.forEach((letter, index) => {
+        const letterRect = letter.getBoundingClientRect();
+        const letterCenterX = letterRect.left + letterRect.width / 2 - rect.left;
+        const letterDistanceFromMouse = Math.abs(mouseX - letterCenterX);
+        const influenceRadius = 200; // 影响半径增大到200px
+        
+        if (letterDistanceFromMouse < influenceRadius) {
+          const influence = 1 - (letterDistanceFromMouse / influenceRadius);
+          if (influence > 0.3) { // 降低触发阈值，让效果更容易触发
+            if (letter.classList.contains('neu')) {
+              letter.classList.add('inverted-neu');
+            } else {
+              letter.classList.add('inverted');
+            }
+          } else {
+            letter.classList.remove('inverted', 'inverted-neu');
+          }
+        } else {
+          letter.classList.remove('inverted', 'inverted-neu');
+        }
+      });
+    });
+    
+    heroTitle.addEventListener('mouseleave', () => {
+      titleLetters.forEach(letter => {
+        letter.classList.remove('inverted', 'inverted-neu');
+      });
+    });
+
+    // 神经共鸣地图 鼠标跟随效果
+    const heroSubtitle = document.getElementById('heroSubtitle');
+    const subtitleLetters = document.querySelectorAll('.subtitle-letter');
+    
+    heroSubtitle.addEventListener('mousemove', (e) => {
+      const rect = heroSubtitle.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      
+      subtitleLetters.forEach((letter) => {
+        const letterRect = letter.getBoundingClientRect();
+        const letterCenterX = letterRect.left + letterRect.width / 2 - rect.left;
+        const letterDistanceFromMouse = Math.abs(mouseX - letterCenterX);
+        const influenceRadius = 150; // 影响半径
+        
+        if (letterDistanceFromMouse < influenceRadius) {
+          const influence = 1 - (letterDistanceFromMouse / influenceRadius);
+          if (influence > 0.3) {
+            letter.classList.add('inverted');
+          } else {
+            letter.classList.remove('inverted');
+          }
+        } else {
+          letter.classList.remove('inverted');
+        }
+      });
+    });
+    
+    heroSubtitle.addEventListener('mouseleave', () => {
+      subtitleLetters.forEach(letter => {
+        letter.classList.remove('inverted');
+      });
+    });
   </script>
 </body>
 </html> 
