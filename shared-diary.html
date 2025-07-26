@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>共享日记 - NEUROTOPOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="shortcut icon" type="image/png" href="logo.png">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+      background: #f8f8f8;
+      overflow-x: hidden;
+    }
+    
+    /* 返回按钮 */
+    .back-btn {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+      background: #f0f0f0;
+      color: #0078ff;
+      padding: 10px 28px;
+      font-size: 18px;
+      font-weight: 500;
+      border: none;
+      border-radius: 22px;
+      box-shadow: 0 2px 8px rgba(0,120,255,0.08);
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    
+    .back-btn:hover {
+      background: rgba(0,120,255,0.08);
+      color: #0056cc;
+    }
+    
+    /* 页面容器 */
+    .page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 32px 80px 32px;
+    }
+    
+    /* 标题样式 */
+    .diary-title-wrap {
+      margin-bottom: 60px;
+      position: relative;
+      width: 200px;
+      max-width: 90vw;
+    }
+    
+    .diary-title {
+      font-size: 40px;
+      font-weight: 400;
+      color: #111;
+      margin: 0;
+      line-height: 1.1;
+      letter-spacing: 2px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    
+    .diary-title-underline {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #fff 0%, #e0e0e0 25%, #888 50%, #e0e0e0 75%, #fff 100%);
+      border-radius: 1px;
+      margin-top: 12px;
+      position: relative;
+    }
+    
+    .diary-title-underline::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 25%, rgba(224,224,224,0.4) 50%, rgba(255,255,255,0.3) 75%, transparent 100%);
+      border-radius: 3px;
+    }
+    
+    /* 照片网格 */
+    .diary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 20px;
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      overflow: visible;
+    }
+    
+    .diary-item {
+      background: transparent;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    
+    .diary-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .page-container {
+        padding: 100px 16px 60px 16px;
+      }
+      
+      .diary-title {
+        font-size: 32px;
+      }
+      
+      .diary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .diary-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="back-btn" onclick="history.back()">← 返回</button>
+  
+  <div class="page-container">
+    <div class="diary-title-wrap">
+      <h1 class="diary-title">共享日记</h1>
+      <div class="diary-title-underline"></div>
+    </div>
+    
+    <div class="diary-grid">
+      <div class="diary-item" onclick="window.location.href='shared1.html'" style="cursor:pointer;">
+        <img src="日记1.jpg" alt="日记1">
+      </div>
+      <div class="diary-item" onclick="window.location.href='shared2.html'" style="cursor:pointer;">
+        <img src="日记2.jpg" alt="日记2">
+      </div>
+      <div class="diary-item" onclick="window.location.href='shared3.html'" style="cursor:pointer;">
+        <img src="日记3.jpg" alt="日记3">
+      </div>
+      <div class="diary-item" onclick="window.location.href='shared4.html'" style="cursor:pointer;">
+        <img src="日记4.jpg" alt="日记4">
+      </div>
+      <div class="diary-item" onclick="window.location.href='shared5.html'" style="cursor:pointer;">
+        <img src="日记5.jpg" alt="日记5">
+      </div>
+      <div class="diary-item" onclick="window.location.href='shared6.html'" style="cursor:pointer;">
+        <img src="日记6.jpg" alt="日记6">
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

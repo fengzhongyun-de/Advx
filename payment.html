@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>支付 - NEUROTOPOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="shortcut icon" type="image/png" href="logo.png">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(120deg, #f5f5f5 0%, #e0e0e0 50%, #bdbdbd 100%);
+      font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .payment-container {
+      background: rgba(255,255,255,0.95);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      padding: 48px;
+      max-width: 800px;
+      width: 90vw;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .payment-title {
+      font-size: 36px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+    
+    .order-info {
+      background: linear-gradient(135deg, #0078ff 0%, #0056cc 100%);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+      color: #fff;
+    }
+    
+    .order-amount {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .order-desc {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    .payment-methods {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    
+    .payment-method {
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 24px;
+      min-width: 200px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .payment-method:hover {
+      border-color: #0078ff;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,120,255,0.15);
+    }
+    
+    .payment-method.active {
+      border-color: #0078ff;
+      background: rgba(0,120,255,0.05);
+    }
+    
+    .payment-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: bold;
+    }
+    
+    .wechat-icon {
+      background: #07c160;
+      color: #fff;
+    }
+    
+    .alipay-icon {
+      background: #1677ff;
+      color: #fff;
+    }
+    
+    .payment-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .payment-desc {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .qr-code-container {
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      display: none;
+    }
+    
+    .qr-code-container.active {
+      display: block;
+    }
+    
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #666;
+      position: relative;
+    }
+    
+    .qr-code::before {
+      content: "二维码占位符";
+      position: absolute;
+    }
+    
+    .qr-code img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    
+    .qr-instruction {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .qr-tip {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .back-btn {
+      background: none;
+      border: 1px solid #ddd;
+      color: #666;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-right: 16px;
+    }
+    
+    .back-btn:hover {
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .contact-btn {
+      background: linear-gradient(135deg, #0078ff 0%, #0056cc 100%);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .contact-btn:hover {
+      background: linear-gradient(135deg, #0056cc 0%, #004499 100%);
+      transform: translateY(-2px);
+    }
+    
+    .payment-notice {
+      font-size: 14px;
+      color: #888;
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(0,120,255,0.05);
+      border-radius: 8px;
+    }
+    
+    @media (max-width: 768px) {
+      .payment-methods {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .payment-method {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container">
+    <h1 class="payment-title">选择支付方式</h1>
+    
+    <div class="order-info">
+      <div class="order-amount">¥99999</div>
+      <div class="order-desc">NEUROTOPOS 神经共鸣地图 - 立即支付</div>
+    </div>
+    
+    <div class="payment-methods">
+      <div class="payment-method" data-method="wechat">
+        <div class="payment-icon wechat-icon">微</div>
+        <div class="payment-name">微信支付</div>
+        <div class="payment-desc">扫码支付，安全便捷</div>
+      </div>
+      
+      <div class="payment-method" data-method="alipay">
+        <div class="payment-icon alipay-icon">支</div>
+        <div class="payment-name">支付宝</div>
+        <div class="payment-desc">快速支付，安全保障</div>
+      </div>
+    </div>
+    
+    <div class="qr-code-container" id="wechatQR">
+      <div class="qr-code">
+        <!-- 这里可以放置真实的微信支付二维码图片 -->
+        <img src="wechat-qr.jpg" alt="微信支付二维码">
+      </div>
+      <div class="qr-instruction">请使用微信扫描二维码完成支付</div>
+      <div class="qr-tip">支付完成后请截图发送给客服确认</div>
+    </div>
+    
+    <div class="qr-code-container" id="alipayQR">
+      <div class="qr-code">
+        <!-- 这里可以放置真实的支付宝二维码图片 -->
+        <img src="alipay-qr.png" alt="支付宝二维码">
+      </div>
+      <div class="qr-instruction">请使用支付宝扫描二维码完成支付</div>
+      <div class="qr-tip">支付完成后请截图发送给客服确认</div>
+    </div>
+    
+    <div style="margin-top: 24px;">
+      <button class="back-btn" onclick="window.location.href='purchase.html'">返回购买</button>
+      <button class="contact-btn" onclick="contactService()">联系客服</button>
+    </div>
+    
+    <div class="payment-notice">
+      <strong>支付说明：</strong><br>
+      • 支付金额：¥99999<br>
+      • 支付成功后，客服将在24小时内为您开通服务<br>
+      • 如有疑问，请及时联系客服：400-123-4567<br>
+      • 支持7天无理由退款
+    </div>
+  </div>
+
+  <script>
+    // 支付方式选择
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    const qrContainers = document.querySelectorAll('.qr-code-container');
+    
+    paymentMethods.forEach(method => {
+      method.addEventListener('click', function() {
+        // 移除所有活动状态
+        paymentMethods.forEach(m => m.classList.remove('active'));
+        qrContainers.forEach(qr => qr.classList.remove('active'));
+        
+        // 添加当前选中状态
+        this.classList.add('active');
+        
+        // 显示对应的二维码
+        const methodType = this.getAttribute('data-method');
+        const qrContainer = document.getElementById(methodType + 'QR');
+        if (qrContainer) {
+          qrContainer.classList.add('active');
+        }
+      });
+    });
+    
+    // 联系客服
+    function contactService() {
+      alert('客服联系方式：\n\n电话：400-123-4567\n微信：neuromap_service\nQQ：123456789\n\n工作时间：9:00-18:00');
+    }
+    
+    // 添加波纹效果
+    function createRipple(event) {
+      const button = event.currentTarget;
+      const ripple = document.createElement('span');
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = event.clientX - rect.left - size / 2;
+      const y = event.clientY - rect.top - size / 2;
+      
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      ripple.classList.add('ripple');
+      
+      button.appendChild(ripple);
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    }
+    
+    // 为按钮添加波纹效果
+    document.querySelectorAll('.back-btn, .contact-btn').forEach(button => {
+      button.addEventListener('click', createRipple);
+    });
+    
+    // 波纹样式
+    const style = document.createElement('style');
+    style.textContent = `
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.6);
+        transform: scale(0);
+        animation: ripple-animation 0.6s linear;
+        pointer-events: none;
+        box-shadow: 0 0 20px rgba(255,255,255,0.8);
+      }
+      
+      @keyframes ripple-animation {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+      
+      .back-btn, .contact-btn {
+        position: relative;
+        overflow: hidden;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // 默认选择微信支付
+    document.querySelector('[data-method="wechat"]').click();
+  </script>
+</body>
+</html> 
